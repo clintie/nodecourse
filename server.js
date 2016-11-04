@@ -1,0 +1,44 @@
+const express=require('express');
+const hbs=require('hbs');
+const fs=require('fs');
+
+var app=express();
+hbs.registerPartials(__dirname+'/views/partials');
+app.set('view engine', 'hbs');
+hbs.registerHelper('getCurrentYear', () => {return new Date().getFullYear()});
+hbs.registerHelper('screamIt', (text)   => {return text.toUpperCase() });
+
+
+
+app.use(express.static(__dirname+'/public'))
+
+app.use((req, res, nxt) => {
+  var now=new Date().toString();
+  var log=`${now}: ${req.method} ${req.url}`;
+  console.log(log);
+  fs.appendFile('server.log', log + '\n', (err) => {
+    if (err) {
+      console.log('unable to write to file...')
+    }
+  });
+  nxt();
+});
+
+app.get('/', (req, res) => {
+  res.render('about.hbs', {title:'Homepage'})
+});
+
+app.get('/about', (req, res)=> {
+  res.render('about.hbs', {pagetitle:'Page Title'})
+  //console.log(req);
+});
+
+app.get('/bad', (req, res)=> {
+  res.send({error:'problemo!'})
+  //console.log(req);
+});
+
+app.listen(3000, () => {
+  console.log('host is up on port 3000')
+});
+
