@@ -34,6 +34,11 @@ app.get('/about', (req, res)=> {
   //console.log(req);
 });
 
+app.get('/projects', (req, res)=> {
+  res.render('projects.hbs', {pagetitle:'Page Title'})
+  //console.log(req);
+});
+
 app.get('/bad', (req, res)=> {
   res.send({error:'problemo!'})
   //console.log(req);
